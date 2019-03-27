@@ -15,25 +15,43 @@
 // Create a variable to reference the database
 var database = firebase.database();
 
-var interval = setInterval(function(){
-  $("#train-schedule>tbody").empty();
-  want to put on values outside set interval functions because creates new one every time set interval fires
-  put timestamp somewhere, then update all rows that have time in them
-  store original value somewhere and update that field
+//removes the database
+//database.ref().remove();
 
-  // database.ref().on('value',function(snapshot){
-  //   snapshot.forEach(function(childSnapshot) {
-  //       // var item = childSnapshot.val();
-  //       // item.key = childSnapshot.key;
-  //       // console.log(item);
-  //       // console.log(item.key);
-  //       //childSnapshot.ref().update({ storageTime: updatedDate })
-  //       //database.ref(item.key).update({ item.trainTimeLeft: moment(item.trainFrequency).subtract(moment(moment(Date.now())).diff(item.trainTimeStamp,"minutes"),"minutes") });
-         updateTable(item.trainName, item.destination, item.firstTrainTime, item.frequency);
-  //   });
-  });
+//$("#train-schedule>tbody").empty();
+//initial read from database
+// database.ref().once('value',function(snapshot){
+//   snapshot.forEach(function(childSnapshot) {
+//        var item = childSnapshot.val();
+//        console.log("childsnapshot key: ", childSnapshot.key);
+//       // item.key = childSnapshot.key;
+//       // console.log(item);
+//       // console.log(item.key);
+//       //childSnapshot.ref().update({ storageTime: updatedDate })
+//       //database.ref(item.key).update({ item.trainTimeLeft: moment(item.trainFrequency).subtract(moment(moment(Date.now())).diff(item.trainTimeStamp,"minutes"),"minutes") });
+       //updateTable(item.trainName, item.destination, item.firstTrainTime, item.frequency, childSnapshot.key);
+//   });
+// });
 
-},60000);
+// var interval = setInterval(function(){
+//   $("#train-schedule>tbody").empty();
+//   // want to put on values outside set interval functions because creates new one every time set interval fires
+//   // put timestamp somewhere, then update all rows that have time in them
+//   // store original value somewhere and update that field
+
+//   database.ref().once('value',function(snapshot){
+//     snapshot.forEach(function(childSnapshot) {
+//          var item = childSnapshot.val();
+//   //       // item.key = childSnapshot.key;
+//   //       // console.log(item);
+//   //       // console.log(item.key);
+//   //       //childSnapshot.ref().update({ storageTime: updatedDate })
+//   //       //database.ref(item.key).update({ item.trainTimeLeft: moment(item.trainFrequency).subtract(moment(moment(Date.now())).diff(item.trainTimeStamp,"minutes"),"minutes") });
+//          updateTable(item.trainName, item.destination, item.firstTrainTime, item.frequency, childSnapshot.key);
+//     });
+//   });
+
+// },60000);
 
 // Use the below initialValue
 var trainName = "";
@@ -63,7 +81,8 @@ var frequency = 0;
     trainName: trainName,
     destination: destination,
     firstTrainTime: firstTrainTime,
-    frequency: frequency
+    frequency: frequency, 
+    //svKey: null
     // nextArrivalTime: nextArrivalTime,
     // minutesAway: minutesAway
   });
@@ -81,7 +100,11 @@ database.ref().on("child_added", function(snapshot,childKey) {
   // storing the snapshot.val() in a variable for convenience
   var sv = snapshot.val();
   console.log("sv: ", snapshot.key);
-  console.log("sv key: " + sv.key);
+  //console.log("sv key: " + sv.key);
+  console.log("fired first");
+  // database.ref().update({
+  //   svKey: snapshot.key
+  // });
   //console.log(childKey);
 
   // Console.loging the last user's data
@@ -90,14 +113,16 @@ database.ref().on("child_added", function(snapshot,childKey) {
   console.log(sv.firstTrainTime);
   console.log(sv.frequency);
 
-  updateTable(sv.trainName, sv.destination, sv.firstTrainTime, sv.frequency);
+  updateTable(sv.trainName, sv.destination, sv.firstTrainTime, sv.frequency, 12345);
 
   // Handle the errors
 }, function(errorObject) {
   console.log("Errors handled: " + errorObject.code);
 });
 
-function updateTable(trainName, destination, firstTrainTime, frequency) {
+function updateTable(trainName, destination, firstTrainTime, frequency, databasekey) {
+  $("#train-schedule>tbody").empty();
+
   //logic: date doesn't matter.  get HH:MM  just divide by 24 hours.  get now.  get diff from now (HH:MM) and first time train arrives(HH:MM) in minutes. divide by frequency.
   //we have now
   //we have time first train arrives
@@ -147,7 +172,7 @@ function updateTable(trainName, destination, firstTrainTime, frequency) {
   minutesAway = diffinminutes;
 
   //updates the DOM
-  var id = trainName.replace(/\s/g,'')+destination.replace(/\s/g,'')+frequency;
+  var id = databasekey;//trainName.replace(/\s/g,'')+destination.replace(/\s/g,'')+frequency;
   var newrow = $("<tr class="+id+">");
   var newth = $("<th>");
   newth.attr("scope", "row");
@@ -178,10 +203,14 @@ function updateTable(trainName, destination, firstTrainTime, frequency) {
   // });
 
   $(".remove").on("click",function(){
-    var idtoremove = $(this).closest("tr").attr("class");
+    //var idtoremove = $(this).closest("tr").attr("class");
     // remove from database
-    add attribute of snapshot key to database
+    //add attribute of snapshot key to database
+    let id = $(this).closest("tr").attr("class");
+    console.log(id);
 
+    //database.ref().doc(id).delete();
+    
     //database.ref().on('value',function(snapshot){
     //   snapshot.forEach(function(childSnapshot) {
     //       var item = childSnapshot.val().trainName.replace(/\s/g,'') + childSnapshot.val().destination.replace(/\s/g,'') + childSnapshot.val().frequency;
