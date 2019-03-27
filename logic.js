@@ -113,7 +113,7 @@ database.ref().on("child_added", function(snapshot,childKey) {
   console.log(sv.firstTrainTime);
   console.log(sv.frequency);
 
-  updateTable(sv.trainName, sv.destination, sv.firstTrainTime, sv.frequency, 12345);
+  updateTable(sv.trainName, sv.destination, sv.firstTrainTime, sv.frequency, "12345");
 
   // Handle the errors
 }, function(errorObject) {
@@ -190,11 +190,11 @@ function updateTable(trainName, destination, firstTrainTime, frequency, database
   var newtd = $("<td>");
   newtd.text(minutesAway);
   newrow.append(newtd);
-  var newtd = $("<td>");
-  var editid = trainName.replace(/\s/g,'')+destination.replace(/\s/g,'')+frequency+"edit";
-  var removeid = trainName.replace(/\s/g,'')+destination.replace(/\s/g,'')+frequency+"remove";
-  newtd.html('<button class="btn btn-primary float-right remove" value='+id+'>Remove</button><button class="btn btn-primary float-right edit" value='+editid+'>Edit</button>');
-  newrow.append(newtd);
+  //var newtd = $("<td>");
+  //var editid = trainName.replace(/\s/g,'')+destination.replace(/\s/g,'')+frequency+"edit";
+  //var removeid = trainName.replace(/\s/g,'')+destination.replace(/\s/g,'')+frequency+"remove";
+  //newtd.html('<button class="btn btn-primary float-right remove" value='+id+'>Remove</button><button class="btn btn-primary float-right edit" value='+editid+'>Edit</button>');
+  //newrow.append(newtd);
   
   $("#train-schedule>tbody").append(newrow);
 
