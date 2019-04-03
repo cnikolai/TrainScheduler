@@ -1,8 +1,3 @@
-// where is the dataAdded coming from (order by child)
-// what is the purpose of order by child?
-// how do we do the unix input - solution to js file
-// where to put the append to table
-
 // Initialize Firebase
 // Make sure that your configuration matches your firebase script version
 // (Ex. 3.0 != 3.7.1)
